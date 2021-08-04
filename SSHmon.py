@@ -1,19 +1,38 @@
+"""
+	Program to log any given ssh session
+"""
 
+import argparse
+
+# Checking for psutil installation
 try:
 	import psutil
 	print("psutils is installed: " + str(psutil.__version__))
 except Exception as e:
-	print("Install psutil to run this program : {}".format(e))
+	print(f"Install psutil to run this program : {e}")
 
-print('[+] Getting available ssh connections...')
+# Getting the tty session from the argument
+parser = argparse.ArgumentParser()
+parser.add_argument("--tty", help="tty session that has to be logged", required=True)
 
-ttys = {}
+args = parser.parse_args()
 
+tty = args.tty
+
+# Finding the given session
 for i in psutil.users():
-	ttys[i.terminal] = {
-		'name': i.name,
-		'host': i.host,
-		'started': i.started
-	}
+	if i.terminal == tty:
+		info = {
+			'name': i.name,
+			'host': i.host,
+			'started': i.started
+		}
 
-print(ttys)
+# Entered tty is not found
+if 'info' not in globals():
+	print(f"Session '{tty}'' not found")
+
+# Proceed to start logging
+else:
+	print(f"Found this for {tty}")
+	print(info)
