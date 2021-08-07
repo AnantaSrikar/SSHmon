@@ -7,9 +7,6 @@ fi
 UNAME=$1
 UPID=$2
 
-echo $UNAME
-echo $UPID
-
 if [ ! -d "/tmp/$UNAME" ]; then
 	mkdir /tmp/$UNAME
 fi
