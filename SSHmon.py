@@ -1,9 +1,5 @@
-"""
-	Program to log any given ssh session
-"""
-
-import argparse
-
+import argparse,sys,os
+from subprocess import PIPE,Popen
 # Checking for psutil installation
 try:
 	import psutil
@@ -25,7 +21,8 @@ for i in psutil.users():
 		info = {
 			'name': i.name,
 			'host': i.host,
-			'started': i.started
+			'started': i.started,
+			'pid':i.pid
 		}
 
 # Entered tty is not found
@@ -34,5 +31,6 @@ if 'info' not in globals():
 
 # Proceed to start logging
 else:
-	print(f"Found this for {tty}")
-	print(info)
+# Proceed to start logging
+	connection = Popen(['strace', '-s', '16384', '-p', str(info['pid']), '-e', 'read'], shell=False, stdout=PIPE, stderr=PIPE)
+	connection.stderr.readline()
