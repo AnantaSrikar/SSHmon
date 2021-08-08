@@ -1,4 +1,3 @@
-from genericpath import isfile
 from flask import Flask, request, send_from_directory
 import os
 
@@ -61,7 +60,7 @@ def checkLogs():
 	web_text = ""
 
 	for user in users:
-		web_text += f"""<a href="check-logs/{user}">{user}</a>    """
+		web_text += f"""<a href="/check-logs/{user}">{user}</a>    """
 	
 	return web_text
 
@@ -74,11 +73,16 @@ def getShowLogs(username):
 	web_text = ""
 
 	for logfile in getUserLogs(username):
-		web_text += f"""<a href="check-logs/{username}/{logfile}">{logfile}</a></br>"""
+		web_text += f"""<a href="/check-logs/{username}/{logfile}">{logfile}</a></br>"""
 	
 	return web_text
 
-if __name__ == "__main__":
-	if not os.path.exists(log_path):
-		os.mkdir(log_path)
-	app.run(debug=True, port=8080)
+@app.route('/check-logs/<username>/<logfile>')
+def showLogFile(username, logfile):
+	if username not in getUsersWithLogs() or len(getUserLogs(username)) == 0:
+		return f"No logs found for the user {username}"
+
+	if not os.path.isfile(os.path.join(log_path, username, logfile)):
+		return f"""No logfile named {logfile} was found! Go back <a href="/check-logs/{username}">here</a> and try again."""
+
+	return send_from_directory(log_path, os.path.join(username, logfile))
