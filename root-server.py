@@ -11,6 +11,6 @@ def home():
 def newShell():
 	data = request.get_json()
 
-	system(f"./log-user.sh {data['user']} {data['PID']}")
+	system(f"./log-user.sh {data['user']} {str(data['PID'])}")
 
 	return ""
