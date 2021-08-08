@@ -1,5 +1,5 @@
 import argparse
-from os import path, remove
+from os import path, remove, environ
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--file", help="file name that has to be cleaned", required=True)
@@ -11,7 +11,7 @@ filename = args.file
 user = args.user
 
 # Path for the logfile
-log_path = "/tmp"
+log_path = environ["LOG_PATH"]
 file_path = path.join(log_path, user, filename)
 
 # List of special escape sequences
