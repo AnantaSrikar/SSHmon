@@ -16,11 +16,13 @@ file_path = path.join(log_path, user, filename)
 
 # List of special escape sequences
 keymaps = {
-	r"\33[A":"[uparr]\n",
-	r"\33[B":"[downarr]\n",
+	r"\33[A":"\n[uparr]\n",
+	r"\33[B":"\n[downarr]\n",
 	r"\33[C":"[rightarr]",
 	r"\33[D":"[leftarr]",
 	r"\177":"[backspace]",
+	r"\r":"\n[enter]\n",
+	r"\4": "\n[exit]"
 }
 
 # Reading the given logfile and writing simultaneously
@@ -43,11 +45,15 @@ with open(path.join(log_path, user, f"{filename[:-4]}-f.log"),"w") as outFPtr:
 			
 			# Start logging
 			elif log_start:
-				if(len(line) == 1):
-					outFPtr.write(line)
-				else:
+				# Every line has '\n' appended at the end
+				if(len(line) == 2):
 					outFPtr.write(line[0])
+				
+				else:
+					if line[:-1] in keymaps:
+						outFPtr.write(keymaps[line[:-1]])
+					else: # Write character by character, to prevent escape sequence
+						for i in range(len(line) - 1):
+							outFPtr.write(line[i])
 
-	# for key in keymaps:
-	# 	text = text.replace(key,keymaps[key])
 remove(file_path)
