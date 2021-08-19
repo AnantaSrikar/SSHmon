@@ -22,11 +22,11 @@ keymaps = {
 	r"\33[D":"[leftarr]",
 	r"\177":"[backspace]",
 	r"\r":"\n[enter]\n",
-	r"\4": "\n[exit]"
+	r"\4": "[exit]"
 }
 
 # Reading the given logfile and writing simultaneously
-with open(path.join(log_path, user, f"{filename[:-4]}-f.log"),"w") as outFPtr:
+with open(path.join(log_path, user, f"{filename[:-9]}.log"),"w") as outFPtr:
 	with open(file_path) as inFPtr:
 	
 		lines = inFPtr.readlines()
